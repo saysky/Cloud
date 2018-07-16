@@ -18,14 +18,30 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class UserController {
 
-
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * 获得用户列表
+     *
+     * @return
+     */
+    @GetMapping("/user")
+    public String getUserList() {
+        return JSON.toJSONString(userRepository.findAll());
+    }
+
+
+    /**
+     * 根据ID查询用户
+     * @param id
+     * @param response
+     * @return
+     */
     @GetMapping("/user/{id}")
-    public String getUser(@PathVariable("id") Integer id,HttpServletResponse response) {
+    public String getUser(@PathVariable("id") Integer id, HttpServletResponse response) {
         User user = userRepository.findOne(id);
-        if(user != null) {
+        if (user != null) {
             return JSON.toJSONString(userRepository.findOne(id));
         } else {
             response.setStatus(404);
@@ -33,8 +49,14 @@ public class UserController {
         }
     }
 
+    /**
+     * 添加新用户
+     * @param user
+     * @param response
+     * @return
+     */
     @PostMapping("/user")
-    public String saveUser(@RequestBody User user,HttpServletResponse response) {
+    public String saveUser(@RequestBody User user, HttpServletResponse response) {
         try {
             userRepository.save(user);
         } catch (Exception e) {
@@ -44,11 +66,22 @@ public class UserController {
         return JSON.toJSONString("用户添加成功！");
     }
 
+    /**
+     * 修改用户
+     * @param user
+     * @return
+     */
     @PutMapping("/user")
     public String updateUser(@RequestBody User user) {
         return JSON.toJSONString(userRepository.save(user));
     }
 
+    /**
+     * 删除用户
+     * @param id
+     * @param response
+     * @return
+     */
     @DeleteMapping("/user/{id}")
     public String updateUser(@PathVariable("id") Integer id, HttpServletResponse response) {
         try {
@@ -58,12 +91,6 @@ public class UserController {
             return JSON.toJSONString("用户不存在！");
         }
         return JSON.toJSONString("删除成功！");
-    }
-
-
-    @GetMapping("/user")
-    public String getUserList() {
-        return JSON.toJSONString(userRepository.findAll());
     }
 
 
